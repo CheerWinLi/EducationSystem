@@ -1,0 +1,26 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: educateProject
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/educate_project?useUnicode=true&rewriteBatchedStatements=true&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: LiZhuoRongMysql
+    driver-class-name: com.mysql.cj.jdbc.Driver
+jwt:
+  key: key
+
+logging:
+  level:
+    com.school.mapper : debug
+
+mybatis-plus:
+  configuration:
+    log-impl=org:
+      apache:
+        ibatis:
+          logging:
+            stdout:
+              StdOutImpl:

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.school.mapper.StudentMapper">
+
+    <select id="getStudentDetails" resultType="com.school.entity.vo.StudentVo">
+        SELECT
+            sc.student_id as id,
+            s.student_id as student_id,
+            s.gender as gender,
+            s.age as age,
+            s.phone_number as phone_number,
+            s.study_year,
+            s.`status`,
+            s.grade as grade,
+            s.clazz as clazz,
+            s.name as student_name,
+            s.student_id as student_id,
+            m.major_name as major_name,
+            a.name as academy_name
+        FROM
+            stu_course_score sc
+                JOIN
+            student s ON s.student_id=sc.student_id
+                JOIN
+            course c ON sc.course_id= c.id
+                JOIN
+            major m ON m.id = s.major_id
+                JOIN
+            academy a ON a.id = s.academy_id
+        WHERE
+            sc.student_id = #{studentId};
+    </select>
+
+    <select id="getStudentDetailsList" resultType="com.school.entity.vo.StudentVo">
+        SELECT
+            sc.student_id as id,
+            s.gender as gender,
+            s.age as age,
+            s.phone_number as phone_number,
+            s.study_year,
+            s.`status`,
+            s.clazz as clazz,
+            s.name as student_name,
+            s.grade as grade,
+            s.student_id as student_id,
+            m.major_name as major_name,
+            a.name as academy_name
+        FROM
+            stu_course_score sc
+                JOIN
+            student s ON s.student_id=sc.student_id
+                JOIN
+            course c ON sc.course_id= c.id
+                JOIN
+            major m ON m.id = s.major_id
+                JOIN
+            academy a ON a.id = s.academy_id
+    </select>
+
+    <select id="getStudentLikeDetailsList" resultType="com.school.entity.vo.StudentVo">
+        <![CDATA[
+        SELECT *
+        FROM (SELECT scs.student_id  as id,
+                     s.gender       as gender,
+                     s.age          as age,
+                     s.phone_number as phone_number,
+                     s.study_year,
+                     s.grade,
+                     s.`status`,
+                     s.clazz        as clazz,
+                     s.name         as student_name,
+                     s.student_id   as student_id,
+                     m.major_name   as major_name,
+                     a.name         as academy_name
+              FROM stu_course_score scs
+                       JOIN
+                   student s ON s.student_id = scs.student_id
+                       JOIN
+                   course c ON scs.course_id = c.id
+                       JOIN
+                   score sc ON sc.id = scs.score_id
+                       JOIN
+                   academy a ON a.id = s.academy_id
+                       JOIN
+                   major m ON m.id = s.major_id) result
+        WHERE CONCAT('result.',${filedName}) LIKE CONCAT('%',#{filedValue},'%');
+        ]]>
+    </select>
+
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.school.mapper.CourseMapper">
+
+    <select id="getCourseListByStuId" resultType="com.school.entity.vo.CourseVo" >
+        <![CDATA[
+        SELECT *
+        FROM
+            (
+                SELECT s.name       as student_name,
+                       s.student_id as student_id,
+                       c.name       as course_name,
+                       c.id         as course_id,
+                       c.credit     as credit,
+                       t.name       as teacher_name,
+                       t.id         as teacherId
+                FROM stu_course_score scs
+                         JOIN
+                     student s ON s.student_id = scs.student_id
+                         JOIN
+                     course c ON scs.course_id = c.id
+                         JOIN
+                     teacher t ON c.teacher_id = t.id
+            ) result
+        WHERE 1 = 1
+        ]]>
+        <if test="studentId != null">
+            <![CDATA[
+            AND result.student_id=#{studentId}
+            ]]>
+        </if>
+    </select>
+
+    <select id="getCourseLikeList" resultType="com.school.entity.vo.CourseVo" >
+    <![CDATA[
+        SELECT *
+        FROM
+            (
+                SELECT s.name       as student_name,
+                       s.student_id as student_id,
+                       c.name       as course_name,
+                       c.id         as course_id,
+                       c.credit     as credit,
+                       sc.score     as score,
+                       sc.id        as score_id,
+                       t.name       as teacher_name,
+                       t.id         as teacher_id
+                FROM stu_course_score scs
+                         JOIN
+                     student s ON s.student_id = scs.student_id
+                         JOIN
+                     course c ON scs.course_id = c.id
+                         JOIN
+                     score sc ON sc.id = scs.score_id
+
+                         JOIN
+                     teacher t ON c.teacher_id = t.id
+            ) result
+        WHERE CONCAT('result.',${fieldName}) LIKE CONCAT('%',#{fieldValue},'%');;
+        ]]>
+</select>
+
+</mapper>

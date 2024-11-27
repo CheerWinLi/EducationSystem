@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.school.mapper.ScoreMapper">
+
+    <select id="getScoresListByStuId" resultType="com.school.entity.vo.ScoreVo" >
+        SELECT s.name       as student_name,
+               s.student_id as student_id,
+               c.name       as course_name,
+               c.id         as course_id,
+               c.credit     as credit,
+               t.name as teacher_name,
+               sc.score     as score
+        FROM stu_course_score scs
+                 JOIN
+             student s ON s.student_id = scs.student_id
+                 JOIN
+             course c ON scs.course_id = c.id
+                 JOIN
+             score sc ON sc.id=scs.score_id
+                JOIN
+            teacher t ON t.id=c.teacher_id
+        WHERE scs.student_id = #{studentId};
+    </select>
+
+    <select id="getScoresList" resultType="com.school.entity.vo.ScoreVo" >
+        SELECT s.name       as student_name,
+               s.student_id as student_id,
+               c.name       as course_name,
+               c.id         as course_id,
+               c.credit     as credit,
+               sc.score     as score,
+               sc.id        as scoreId,
+               t.name       as teacher_name,
+               t.id         as teacherId
+        FROM stu_course_score scs
+                 JOIN
+             student s ON s.student_id = scs.student_id
+                 JOIN
+             course c ON scs.course_id = c.id
+                 JOIN
+             score sc ON sc.id = scs.score_id
+                 JOIN
+             teacher t ON c.teacher_id = t.id
+    </select>
+
+    <select id="getScoresLikeList" resultType="com.school.entity.vo.ScoreVo" >
+SELECT *
+FROM (SELECT s.name       as student_name,
+             s.student_id as student_id,
+             c.name       as course_name,
+             c.id         as course_id,
+             c.credit     as credit,
+             sc.score     as score,
+             sc.id        as scoreId,
+             t.name       as teacher_name,
+             t.id         as teacherId
+      FROM stu_course_score scs
+               JOIN
+           student s ON s.student_id = scs.student_id
+               JOIN
+           course c ON scs.course_id = c.id
+               JOIN
+           score sc ON sc.id = scs.score_id
+               JOIN
+           teacher t ON c.teacher_id = t.id) result
+
+        WHERE CONCAT('result.',${fieldName}) LIKE CONCAT('%',#{fieldValue},'%');
+    </select>
+
+</mapper>

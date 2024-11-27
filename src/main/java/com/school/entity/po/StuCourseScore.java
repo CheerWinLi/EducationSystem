@@ -1,11 +1,11 @@
 package com.school.entity.po;
 
-import java.io.Serializable;
-
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 /**
  * (StuClazzScore)实体类
  *
